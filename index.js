@@ -1,17 +1,21 @@
+import dotenv from "dotenv"
 import express, { json } from "express"
 import morgan from "morgan"
 import cors from "cors"
 import helmet from "helmet"
-import { config } from "dotenv"
 import baseRoute from "./routes/index.js"
 import userRoute from "./routes/user.js"
-import moduleName from "module"
+import { Db } from "./utils/db.js"
+dotenv.config()
 
-config()
+const db = new Db({
+	dbUri: process.env.DB_URI,
+})
+
 const app = express()
 const PORT = process.env.PORT || 3000
-const VERSION = "v1"
-const BASE_URL = `api/${VERSION}`
+const VERSION = 1
+const BASE_URL = `/api/v${VERSION}`
 
 app.use(helmet())
 app.use(cors())

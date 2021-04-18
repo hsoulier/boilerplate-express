@@ -1,11 +1,20 @@
 import mongoose from "mongoose"
-import { config } from "dotenv"
-config()
-const { DB_URI } = process.env
 
-mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-const db = mongoose.connection
-
-db.on("error", console.error.bind(console, "MongoDB connection error:"))
-
-export default db
+export class Db {
+	constructor({ dbUri }) {
+		this.dbUri = dbUri
+		console.log(this.dbUri)
+		this.connect()
+	}
+	async connect() {
+		try {
+			await mongoose.connect(this.dbUri, {
+				useNewUrlParser: true,
+				useUnifiedTopology: true,
+			})
+			console.info(`Connected to database`)
+		} catch (error) {
+			console.error(`Connection error: ${error.stack}`)
+		}
+	}
+}
